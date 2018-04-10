@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <h:outputStylesheet library="css" name="personal.css"  />
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Ver Preguntas</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <b:navBar brand="Ayuda Ciencias" brandHref="#" inverse="true" fixed="top">
+            <b:navbarLinks>
+                
+                <b:navLink value="Agregar Pregunta" href="#"></b:navLink>
+            
+            </b:navbarLinks>
+                <h:form styleClass="navbar-form navbar-right" >
+                <div class="form-group">
+                    <b:inputText placeholder="Email" fieldSize="sm"/>
+                    <!--input type="text" class="form-control" placeholder="Search"/-->
+                </div>
+                <div class="form-group">
+                    <b:inputText placeholder="Password" fieldSize="sm"/>
+                </div> 
+                #{' '}
+                <b:commandButton action="a" value="Sign in" look="success" icon="chevron-right" iconAlign="right"/>
+            
+                <p:commandButton value="Login"  action="#{sesion.login()}"/>
+                <h:panelGroup rendered="#{not empty user}">
+            <p>Welcome, #{user.nombre} #{user.contrasena}</p>
+            <p:commandButton value="Usuarios"  rendered="#{ user.administrador}" action="usuarios.xhtml"/>
+            
+                
+               
+            
+            
+    </h:panelGroup>
+            </h:form>
+        </b:navBar>
+            
+            <h:form id="buscar">
+                <p:messages id="messages" showDetail="true" closable="true">
+                    <p:autoUpdate/>
+                </p:messages>
+                <h:outputText value="Buscar"/>
+                <h:inputText value="#{buscarContenido.buscar}"  /><br/>
+                <h:commandButton value="buscar" action="#{buscarContenido.busca()}" />
+            </h:form>
+
+            <p:dataScroller value="#{buscarContenido.resultado}" var="pregunta">
+                
+                <h:link value="#{pregunta.contenido}" outcome="verRespuestas.xhtml" includeViewParams="true" >
+                    <f:param value="#{pregunta.idpregunta}" name="id"></f:param>
+                </h:link>
+            </p:dataScroller>
+
+
+            <p:dataScroller value="#{verPreguntas.preguntas}" var="pregunta" >
+                <h:link value="#{pregunta.contenido}" outcome="verRespuestas.xhtml" includeViewParams="true">
+                    <f:param value="#{pregunta.idpregunta}" name="id"></f:param>
+                </h:link>
+
+                <h:outputText value="#{pregunta.usuario.nombre}" style="font-weight: bold" />
+                <h:form>
+                   
+                    <p:commandButton value="Borrar Usuario"  rendered="#{ user.administrador}" action="#{borrarUsuario.borrarUsuario(pregunta.usuario.idusuario)}"/>
+                <p:commandButton value="Borrar Pregunta" rendered="#{ user.administrador}" action="#{borrarPregunta.borrarPregunta(pregunta.idpregunta)}"/>
+                
+                </h:form>
+            </p:dataScroller>
+        </h:body>
+
+    </f:view>
+</html>
+
